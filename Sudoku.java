@@ -22,7 +22,7 @@ public class Sudoku {
             setSize(500,500);
             System.out.println("n: "+ n);
 
-            setLayout(new GridLayout(n, n, 2, 2));
+            setLayout(new GridLayout(n, n));
             setTitle("Sudoku Solver Visualization");
             setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -34,7 +34,15 @@ public class Sudoku {
                     jLabel[i][j].setOpaque(true);
                     jLabel[i][j].setFont(new Font("Arial", Font.BOLD, 16));
                     jLabel[i][j].setForeground(Color.WHITE);
-                    jLabel[i][j].setBackground((i + j) % 2 == 0 ? Color.GRAY : Color.DARK_GRAY);
+                    jLabel[i][j].setBackground((i + j) % 2 == 0 ? Color.LIGHT_GRAY : Color.DARK_GRAY);
+
+                    //  Adding borders
+                    int top = i % 3 == 0 ? 3 : 1;
+                    int left = j % 3 == 0 ? 3 : 1;
+                    int bottom = i == n - 1 ? 3 : 0;
+                    int right = j == n - 1 ? 3 : 0;
+//                    jLabel[i][j].setBorder(BorderFactory.);
+                    jLabel[i][j].setBorder(BorderFactory.createMatteBorder(top, left, bottom, right, Color.BLACK));
 
                     add(jLabel[i][j]);
                 }
@@ -155,6 +163,8 @@ public class Sudoku {
 
                 if(board[i][j] == 0){
                     for(int c= 1; c<= 9; c++){
+                        wait(2);
+
                         int boardNum= (3*(i/3))+(3+j)/3 -1;
 
                         if( check(i, j, c) ){
@@ -163,6 +173,7 @@ public class Sudoku {
                             boxHs.get(boardNum).add(c);
                             board[i][j]= c;
                             jLabel[i][j].setText(c+"");
+                            jLabel[i][j].setForeground(Color.RED);
 
                             if(solve(board, count+1)){
                                 return true;
@@ -191,5 +202,13 @@ public class Sudoku {
             return false;
         }
         return true;
+    }
+
+    public static void wait(int time_ms){
+        try {
+            Thread.sleep(time_ms);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
