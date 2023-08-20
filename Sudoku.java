@@ -80,8 +80,6 @@ public class Sudoku {
             String val[]=s1[i].split("[,]");
 
             for(int j=0; j<9; j++){
-                System.out.println(val[j]);
-
                 if(val[j].equals("0") == false){
                     board[i][j]= Integer.parseInt(val[j]);
                     jLabel[i][j].setText(val[j]);
@@ -109,7 +107,7 @@ public class Sudoku {
 
                 if(board[i][j] == 0){
                     for(int c= 1; c<= 9; c++){
-                        wait(2);
+                        wait(1);
 
                         int boardNum= (3*(i/3))+(3+j)/3 -1;
 
