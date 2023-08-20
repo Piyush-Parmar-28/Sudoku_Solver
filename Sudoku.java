@@ -2,7 +2,8 @@ package Sudoku_Solver;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Sudoku {
@@ -10,6 +11,7 @@ public class Sudoku {
     static List<HashSet<Integer>> colHs;
     static List<HashSet<Integer>> boxHs;
     static final int n= 9;
+    static int count;
     static JLabel[][] jLabel;
     static int[][] board;
 
@@ -20,7 +22,6 @@ public class Sudoku {
 
             setVisible(true);
             setSize(500,500);
-            System.out.println("n: "+ n);
 
             setLayout(new GridLayout(n, n));
             setTitle("Sudoku Solver Visualization");
@@ -41,7 +42,6 @@ public class Sudoku {
                     int left = j % 3 == 0 ? 3 : 1;
                     int bottom = i == n - 1 ? 3 : 0;
                     int right = j == n - 1 ? 3 : 0;
-//                    jLabel[i][j].setBorder(BorderFactory.);
                     jLabel[i][j].setBorder(BorderFactory.createMatteBorder(top, left, bottom, right, Color.BLACK));
 
                     add(jLabel[i][j]);
@@ -51,11 +51,10 @@ public class Sudoku {
     }
 
     public static void main( String args[] ){
+        count= 0;
         rowHs= new ArrayList<>();
         colHs= new ArrayList<>();
         boxHs= new ArrayList<>();
-
-        myFrame obj= new myFrame();
 
         for(int i=0; i<9; i++){
             rowHs.add(new HashSet<>());
@@ -63,81 +62,30 @@ public class Sudoku {
             boxHs.add(new HashSet<>());
         }
 
-        board[0][0]= 5;
-        board[0][1]= 3;
-        board[0][4]= 7;
-        jLabel[0][0].setText(5+"");
-        jLabel[0][1].setText(3+"");
-        jLabel[0][4].setText(7+"");
+        myFrame obj= new myFrame();
 
-        board[1][0]= 6;
-        board[1][3]= 1;
-        board[1][4]= 9;
-        board[1][5]= 5;
-        jLabel[1][0].setText(6+"");
-        jLabel[1][3].setText(1+"");
-        jLabel[1][4].setText(9+"");
-        jLabel[1][5].setText(5+"");
+        //  Adding the API array values to board array
+        addToBoard(args[0]);
 
-        board[2][1]= 9;
-        board[2][2]= 8;
-        board[2][7]= 6;
-        jLabel[2][1].setText(9+"");
-        jLabel[2][2].setText(8+"");
-        jLabel[2][7].setText(6+"");
+        solve(board, count);
+    }
 
-        board[3][0]= 8;
-        board[3][4]= 6;
-        board[3][8]= 3;
-        jLabel[3][0].setText(8+"");
-        jLabel[3][4].setText(6+"");
-        jLabel[3][8].setText(3+"");
+    public static void addToBoard(String s){
+        s=s.replace("[","");
+        s=s.substring(0,s.length()-2);
+        String s1[]=s.split("],");
 
-        board[4][0]= 4;
-        board[4][3]= 8;
-        board[4][5]= 3;
-        board[4][8]= 1;
-        jLabel[4][0].setText(4+"");
-        jLabel[4][3].setText(8+"");
-        jLabel[4][5].setText(3+"");
-        jLabel[4][8].setText(1+"");
-
-        board[5][0]= 7;
-        board[5][4]= 2;
-        board[5][8]= 6;
-        jLabel[5][0].setText(7+"");
-        jLabel[5][4].setText(2+"");
-        jLabel[5][8].setText(6+"");
-
-        board[6][1]= 6;
-        board[6][6]= 2;
-        board[6][7]= 8;
-        jLabel[6][1].setText(6+"");
-        jLabel[6][6].setText(2+"");
-        jLabel[6][7].setText(8+"");
-
-        board[7][3]= 4;
-        board[7][4]= 1;
-        board[7][5]= 9;
-        board[7][8]= 5;
-        jLabel[7][3].setText(4+"");
-        jLabel[7][4].setText(1+"");
-        jLabel[7][5].setText(9+"");
-        jLabel[7][8].setText(5+"");
-
-        board[8][4]= 8;
-        board[8][7]= 7;
-        board[8][8]= 9;
-        jLabel[8][4].setText(8+"");
-        jLabel[8][7].setText(7+"");
-        jLabel[8][8].setText(9+"");
-
-
-        int count= 0;
         for(int i=0; i<9; i++){
-            for(int j=0; j<9; j++){
+            s1[i]=s1[i].trim();
+            String val[]=s1[i].split("[,]");
 
-                if(board[i][j] != 0){
+            for(int j=0; j<9; j++){
+                System.out.println(val[j]);
+
+                if(val[j].equals("0") == false){
+                    board[i][j]= Integer.parseInt(val[j]);
+                    jLabel[i][j].setText(val[j]);
+
                     int c= board[i][j];
                     int boxNum= (3*(i/3))+(3+j)/3 -1;
 
@@ -149,8 +97,6 @@ public class Sudoku {
                 }
             }
         }
-
-        solve(board, count);
     }
 
     public static boolean solve(int[][] board, int count){
